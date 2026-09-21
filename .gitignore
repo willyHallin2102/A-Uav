@@ -1,0 +1,9 @@
+# Helper for avoiding upload unnecessary files
+
+# Python Artifacts is being Ignored
+__pycache__/
+*.pyc
+*.pyo
+
+.vscode/
+.venv/

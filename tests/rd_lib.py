@@ -11,25 +11,17 @@ import traceback
 # Helpers
 # ============================================================
 
-
 PASSED, FAILED, SKIPPED = 0, 0, 0
 
-
 def section(name):
-    print()
-    print("=" * 70)
-    print(name)
-    print("=" * 70)
+    print(f"\n{name}")
 
-
-def test(name, func):
+def test(name, f):
     global PASSED, FAILED, SKIPPED
-
     print(f"\n[TEST] {name}")
 
     try:
-        result = func()
-
+        result = f()
         if result is False:
             SKIPPED += 1
             print(f"[SKIP] {name}")
@@ -56,7 +48,6 @@ print(f"Python : {sys.version}")
 print(f"Executable : {sys.executable}")
 print(f"Platform : {sys.platform}")
 print(f"Working directory : {os.getcwd()}")
-
 
 # ============================================================
 # Package imports
@@ -107,7 +98,6 @@ test("Import all packages", import_packages)
 
 section("NUMPY")
 
-
 def test_numpy():
     import numpy as np
 
@@ -121,9 +111,7 @@ def test_numpy():
     print(f"Dtype       : {a.dtype}")
     print(f"Checksum    : {b.sum():.4f}")
 
-
 test("NumPy computation", test_numpy)
-
 
 # ============================================================
 # SciPy
@@ -149,13 +137,11 @@ def test_scipy():
 
 test("SciPy linear algebra", test_scipy)
 
-
 # ============================================================
 # Polars
 # ============================================================
 
 section("POLARS")
-
 
 def test_polars():
     import polars as pl
@@ -180,16 +166,13 @@ def test_polars():
 
     print(result)
 
-
 test("Polars DataFrame operations", test_polars)
-
 
 # ============================================================
 # PyArrow
 # ============================================================
 
 section("PYARROW")
-
 
 def test_pyarrow():
     import pyarrow as pa
@@ -205,13 +188,11 @@ def test_pyarrow():
 
 test("PyArrow table creation", test_pyarrow)
 
-
 # ============================================================
 # Numba
 # ============================================================
 
 section("NUMBA")
-
 
 def test_numba():
     import numpy as np
@@ -236,17 +217,14 @@ def test_numba():
 
 test("Numba JIT compilation and execution", test_numba)
 
-
 # ============================================================
 # orjson
 # ============================================================
 
 section("ORJSON")
 
-
 def test_orjson():
     import orjson
-
     data = {
         "name": "GPU test",
         "values": list(range(10_000)),
@@ -261,9 +239,7 @@ def test_orjson():
 
     print(f"Serialized size : {len(encoded):,} bytes")
 
-
 test("JSON serialization", test_orjson)
-
 
 # ============================================================
 # einops
@@ -271,15 +247,13 @@ test("JSON serialization", test_orjson)
 
 section("EINOPS")
 
-
 def test_einops():
     import numpy as np
     from einops import rearrange
 
     x = np.random.rand(2, 3, 4, 5)
-
     y = rearrange(
-        x,"batch channels height width -> batch height width channels",
+        x, "batch channels height width -> batch height width channels",
     )
 
     assert y.shape == (2, 4, 5, 3)
@@ -289,20 +263,17 @@ def test_einops():
 
 test("Einops tensor rearrangement", test_einops)
 
-
 # ============================================================
 # h5py
 # ============================================================
 
 section("H5PY")
 
-
 def test_h5py():
     import numpy as np
     import h5py
 
     with tempfile.NamedTemporaryFile(suffix=".h5") as f:
-
         data = np.arange(100_000, dtype=np.float32)
 
         with h5py.File(f.name, "w") as h5:
@@ -316,16 +287,13 @@ def test_h5py():
         print(f"Dataset shape : {loaded.shape}")
         print(f"Dataset dtype : {loaded.dtype}")
 
-
 test("HDF5 write/read", test_h5py)
-
 
 # ============================================================
 # Matplotlib
 # ============================================================
 
 section("MATPLOTLIB")
-
 
 def test_matplotlib():
     import matplotlib
@@ -347,16 +315,13 @@ def test_matplotlib():
 
     plt.close(figure)
 
-
 test("Matplotlib rendering", test_matplotlib)
-
 
 # ============================================================
 # Seaborn
 # ============================================================
 
 section("SEABORN")
-
 
 def test_seaborn():
     import matplotlib
@@ -367,11 +332,7 @@ def test_seaborn():
     import seaborn as sns
 
     figure = plt.figure()
-
-    sns.lineplot(
-        x=[1, 2, 3, 4],
-        y=[1, 4, 9, 16],
-    )
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 4, 9, 16],)
 
     with tempfile.NamedTemporaryFile(suffix=".png") as f:
         figure.savefig(f.name)
@@ -379,7 +340,6 @@ def test_seaborn():
         assert os.path.getsize(f.name) > 0
 
     plt.close(figure)
-
 
 test("Seaborn plotting", test_seaborn)
 
@@ -389,15 +349,13 @@ test("Seaborn plotting", test_seaborn)
 
 section("TENSORFLOW")
 
-
 def test_tensorflow():
     import tensorflow as tf
 
     print(f"TensorFlow version : {tf.__version__}")
-
     print("\nBuild information:")
-    print(tf.sysconfig.get_build_info())
 
+    print(tf.sysconfig.get_build_info())
     print("\nPhysical devices:")
 
     for device in tf.config.list_physical_devices():
@@ -406,7 +364,6 @@ def test_tensorflow():
     print("\nGPU devices:")
 
     gpus = tf.config.list_physical_devices("GPU")
-
     for gpu in gpus:
         print(f"  {gpu}")
 
@@ -414,7 +371,6 @@ def test_tensorflow():
         raise RuntimeError("TensorFlow cannot see an NVIDIA GPU.")
 
 test("TensorFlow installation and GPU detection", test_tensorflow)
-
 
 # ============================================================
 # TensorFlow CPU computation
@@ -437,16 +393,13 @@ def test_tensorflow_cpu():
 
     print(f"Result : {result}")
 
-
 test("TensorFlow CPU computation", test_tensorflow_cpu)
-
 
 # ============================================================
 # TensorFlow GPU computation
 # ============================================================
 
 section("TENSORFLOW GPU")
-
 
 def test_tensorflow_gpu():
     import tensorflow as tf
@@ -480,9 +433,7 @@ def test_tensorflow_gpu():
     print(f"Result : {result:.6f}")
     print(f"Time : {elapsed:.4f} seconds")
 
-
 test("Actual TensorFlow GPU matrix multiplication", test_tensorflow_gpu)
-
 
 # ============================================================
 # TensorFlow neural network
@@ -490,10 +441,8 @@ test("Actual TensorFlow GPU matrix multiplication", test_tensorflow_gpu)
 
 section("TENSORFLOW NEURAL NETWORK")
 
-
 def test_tensorflow_model():
     import tensorflow as tf
-
     model = tf.keras.Sequential([
         tf.keras.layers.Input(shape=(32,)),
         tf.keras.layers.Dense(128, activation="relu"),
@@ -502,8 +451,7 @@ def test_tensorflow_model():
     ])
 
     model.compile(
-        optimizer="adam",
-        loss=tf.keras.losses.SparseCategoricalCrossentropy(
+        optimizer="adam", loss=tf.keras.losses.SparseCategoricalCrossentropy(
             from_logits=True
         ),
     )
@@ -521,16 +469,13 @@ def test_tensorflow_model():
 
     print(f"Final loss : {loss:.6f}")
 
-
 test("TensorFlow GPU neural network training", test_tensorflow_model)
-
 
 # ============================================================
 # TensorFlow tf.data
 # ============================================================
 
 section("TENSORFLOW DATA PIPELINE")
-
 
 def test_tfdata():
     import tensorflow as tf
@@ -552,9 +497,7 @@ def test_tfdata():
 
     print(f"Batches processed : {batches}")
 
-
 test("TensorFlow tf.data pipeline", test_tfdata)
-
 
 # ============================================================
 # Sionna
@@ -562,22 +505,18 @@ test("TensorFlow tf.data pipeline", test_tfdata)
 
 section("SIONNA")
 
-
 def test_sionna():
     import sionna
 
     print(f"Sionna version : {getattr(sionna, '__version__', 'unknown')}")
 
-
 test("Sionna import", test_sionna)
-
 
 # ============================================================
 # Sionna + TensorFlow
 # ============================================================
 
 section("SIONNA + TENSORFLOW")
-
 
 def test_sionna_tensorflow():
     import tensorflow as tf
@@ -596,24 +535,21 @@ def test_sionna_tensorflow():
     print("Sionna imported successfully.")
     print("TensorFlow GPU tensor operation successful.")
 
-
 test("Sionna/TensorFlow compatibility", test_sionna_tensorflow)
-
 
 # ============================================================
 # Summary
 # ============================================================
 
 section("TEST SUMMARY")
+section("------------")
 
-print(f"PASSED : {PASSED}")
-print(f"FAILED : {FAILED}")
-print(f"SKIPPED: {SKIPPED}")
-
-print()
+print(f"Passed : {PASSED}")
+print(f"Failed : {FAILED}")
+print(f"skipped: {SKIPPED}\n")
 
 if FAILED:
-    print("RESULT: FAILED")
+    print("RESULT: Failed")
     sys.exit(1)
 
-print("RESULT: ALL TESTS PASSED")
+print("RESULT: All tests have passed")
